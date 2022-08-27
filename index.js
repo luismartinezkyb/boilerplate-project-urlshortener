@@ -22,7 +22,6 @@ const Url= mongoose.model ('Url', urlSchema);
 const port = process.env.PORT || 3000;
 //middlewares
 app.use(cors());
-app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 app.use('/public', express.static(`${process.cwd()}/public`));
 
@@ -43,8 +42,8 @@ app.get('/api/shorturl/:short_url', (req, res)=>{
       if(err){
         return console.error(err)
       }
-      if(data.length !== 0){
-        
+      if(data && data.length !== 0){
+        console.log(data)
         res.redirect(data.original_url);
       }
       else{
@@ -90,7 +89,7 @@ app.post('/api/shorturl',(req, res)=>{
                   if(err){
                     return res.status(400).send(err)
                   } 
-                  
+                  console.log("newData",data)
                   res.send({"original_url": data.original_url,"short_url": data.short_url});
                 })
               }).catch((err) => {
@@ -100,6 +99,8 @@ app.post('/api/shorturl',(req, res)=>{
           })
         } 
       });
+      //res.send({"correct":newURI});
+      
   } 
   else {
       res.send({"error": "Invalid URL"});
@@ -109,3 +110,4 @@ app.post('/api/shorturl',(req, res)=>{
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
 });
+
